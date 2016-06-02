@@ -1,5 +1,5 @@
 <?php
-	
+
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
@@ -10,7 +10,7 @@ $api->version('v1', function ($api) {
 	$api->post('auth/reset', 'App\Api\V1\Controllers\AuthController@reset');
 
 	// example of protected route
-	$api->get('protected', ['middleware' => ['api.auth'], function () {		
+	$api->get('protected', ['middleware' => ['api.auth'], function () {
 		return \App\User::all();
     }]);
 
@@ -18,5 +18,13 @@ $api->version('v1', function ($api) {
 	$api->get('free', function() {
 		return \App\User::all();
 	});
+
+  $api->group(['middleware' => 'api.auth'], function ($api) {
+    $api->get('books', 'App\Api\V1\Controllers\BookController@index');
+  	$api->get('books/{id}', 'App\Api\V1\Controllers\BookController@show');  
+    $api->post('books', 'App\Api\V1\Controllers\BookController@store');
+  	$api->put('books/{id}', 'App\Api\V1\Controllers\BookController@update');
+  	$api->delete('books/{id}', 'App\Api\V1\Controllers\BookController@destroy');
+  });
 
 });
